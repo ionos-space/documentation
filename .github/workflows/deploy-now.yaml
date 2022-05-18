@@ -39,12 +39,16 @@ jobs:
           node-version: v14.x
 
       - name: Build Node assets
-        env:
-          CI: true
-          SITE_URL: ${{ steps.project.outputs.site-url }}
+        if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         run: |
           npm ci
           npm run build
+        env:
+          CI: true
+          SITE_URL: ${{ steps.project.outputs.site-url }}
+          URL_WEB: https://ionos.space
+          URL_GITHUB: https://github.com/ionos-deploy-now/documentation/tree/main
+          SHOW_BLOG: true
 
       - name: Deploy to IONOS
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
